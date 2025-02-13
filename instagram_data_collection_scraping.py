@@ -179,8 +179,8 @@ if __name__ == "__main__":
         # "shenzhenskyscraper", "beijingskyscraper", "hangzhouskyscraper", "guangzhouskyscraper"
         # "chongqingskyscraper", "nanjingskyscraper", "chengduskyscraper", "hongkongskyscrapers"
     # ]
-    CSV_OUTPUT_PATH = "instagram_posts_data.csv"
-    EXCEL_OUTPUT_PATH = "instagram_posts_data.xlsx"
+    CSV_OUTPUT_PATH = "./results/instagram_posts_data.csv"
+    EXCEL_OUTPUT_PATH = "./results/instagram_posts_data.xlsx"
     MODASH_API_KEY = os.getenv("MODASH_API_KEY")
 
     # Scrape Instagram posts

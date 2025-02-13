@@ -8,12 +8,19 @@ import ace_tools_open as tools  # Corrected tools import
 from langdetect import detect
 from deep_translator import GoogleTranslator  # For translation
 import matplotlib.pyplot as plt
+import regex as re
+from nltk.corpus import stopwords
+import chardet
 
 
 class InstagramSentimentAnalyzer:
     def __init__(self, file_path, model_name="qwen2.5:7b-instruct", temperature=0):
         self.file_path = file_path
-        self.df = pd.read_csv(file_path)
+        with open(file_path, 'rb') as f:
+            raw_data = f.read()  # Read the entire file or a chunk of it
+            result = chardet.detect(raw_data)
+        print(result)
+        self.df = pd.read_csv(file_path, encoding='utf-8-sig')
         self.model = Ollama(model=model_name, temperature=temperature)
 
     def preprocess_comments(self):
@@ -38,15 +45,22 @@ class InstagramSentimentAnalyzer:
             print(f"Error in language detection/translation: {e}")
             return comment  # Return original if detection/translation fails
 
-    def analyze_sentiment(self, comment):
+    def clean_comment(self, comment):
+        """Removes special characters and retains all punctuation and numbers from the comment."""
+        # Remove special characters but keep all punctuation and numbers
+        comment = re.sub(r'[^a-zA-Z0-9\s\p{P}]', '', comment)
+        return comment
+
+    def analyze_sentiment(self, comment_raw):
         """Classifies sentiment as positive, neutral, or negative using Ollama."""
-        if not comment.strip():
+        if not comment_raw.strip():
             return "neutral"
 
         # Detect and translate if needed
-        comment = self.detect_and_translate(comment)
+        comment_translated = self.detect_and_translate(comment_raw)
+        comment_cleaned = self.clean_comment(comment_translated)
 
-        prompt = f"Classify the sentiment of this comment as 'positive', 'neutral', or 'negative':\n\n\"{comment}. Give your answer in just ONE SINGLE WORD.\""
+        prompt = f"Classify the sentiment of this comment as 'positive', 'neutral', or 'negative':\n\n\"{comment_cleaned}. Give your answer in just ONE SINGLE WORD.\""
 
         try:
             response = self.model.invoke([HumanMessage(content=prompt)]).strip().lower()
@@ -199,19 +213,19 @@ class InstagramSentimentAnalyzer:
         else:
             print("Warning: DataFrame is empty. No results saved.")
 
-    def run_analysis(self, updated_file_path):
+    def run_analysis(self, save_path):
         """Runs the full sentiment analysis pipeline."""
         # self.df = self.df.head(20)  # Limit to first 20 rows for testing
-        # self.preprocess_comments()  # for testing
-        # self.apply_sentiment_analysis()
-        # self.compute_overall_sentiment()
+        self.preprocess_comments() 
+        self.apply_sentiment_analysis()
+        self.compute_overall_sentiment()
         self.compute_category_metrics()
-        self.save_results(updated_file_path)
+        self.save_results(save_path)
 
 
 # Usage
-input_file_path = "instagram_posts_data.csv"
-results_file_path = "instagram_posts_sentiment_analysis_results.csv"
+input_file_path = "./results/instagram_posts_data.txt"
+results_file_path = "./results/instagram_posts_sentiment_analysis_results.csv"
 
 analyzer = InstagramSentimentAnalyzer(results_file_path)
-analyzer.run_analysis(results_file_path)
+analyzer.run_analysis(save_path=results_file_path)
