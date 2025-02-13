@@ -1,0 +1,7 @@
+{
+    "extractor": {
+        "instagram": {
+            "cookies": "/home/hyx/projects/freelancing/SAAC/instagram_cookiess.txt"
+        }
+    }
+}
