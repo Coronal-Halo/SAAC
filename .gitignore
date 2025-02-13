@@ -1,4 +1,7 @@
-.env
-.png
-.rar
+*.env
+*.png
+*.rar
 posts/
+.vscode/
+Instagram_Graph_API_credentials.txt
+instagram_cookies.txt

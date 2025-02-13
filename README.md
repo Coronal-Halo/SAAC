@@ -5,7 +5,7 @@ This project explores **multimodal sentiment analysis** for architecture-related
 
 ## 🚀 Features
 - **Multimodal Data Processing**: Combines text (comments, captions), images, and video features for sentiment prediction.
-- **Deep Learning-Based Sentiment Analysis**: Utilizes **transformer models** for text and **vision models** for image/video understanding.
+- **Deep Learning-Based Sentiment Analysis**: Utilizes **LLMs** for text and **vision models** for image/video understanding.
 - **Engagement Score Prediction**: Analyzes user interactions to determine sentiment-driven engagement.
 - **Dataset Integration**: Supports **Instagram** metadata for sentiment analysis.
 - **Visualization Tools**: Provides sentiment distribution insights and engagement trends.
